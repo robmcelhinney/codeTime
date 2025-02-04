@@ -84,6 +84,12 @@ You can manually delete cache files in the `cache/` folder if needed.
 
 ---
 
+## Screenshot
+
+![screenshot](img/screenshot.png)
+
+---
+
 ## **License 📜**
 
 This project is licensed under the **MIT License**.
