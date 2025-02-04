@@ -10,26 +10,11 @@ export default function Home() {
     const [weekdayData, setWeekdayData] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
-    const [timezone, setTimezone] = useState("UTC") // Default to UTC (SSR-safe)
-    const [timezones, setTimezones] = useState(["UTC"]) // Default to UTC
+    const [timezone, setTimezone] = useState("UTC") // Safe default for SSR
 
     useEffect(() => {
-        setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone) // Get user’s timezone
-
-        // Get all available timezones if supported
-        if (typeof Intl.supportedValuesOf === "function") {
-            setTimezones(Intl.supportedValuesOf("timeZone"))
-        } else {
-            // Fallback hardcoded timezone list (if Intl.supportedValuesOf is not available)
-            setTimezones([
-                "UTC",
-                "Europe/London",
-                "America/New_York",
-                "Asia/Tokyo",
-                "Australia/Sydney",
-                "Africa/Johannesburg",
-            ])
-        }
+        const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+        setTimezone(clientTimezone) // Set actual timezone on client load
     }, [])
 
     function getDefaultDate() {
@@ -77,6 +62,10 @@ export default function Home() {
             }}
         >
             <h1>GitHub Commit Patterns</h1>
+            <p style={{ fontSize: "0.9rem", color: "gray" }}>
+                📌 Note: This only includes commits to the repository's
+                **default branch** (e.g., `main` or `master`).
+            </p>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -96,21 +85,13 @@ export default function Home() {
                     onChange={(e) => setSince(e.target.value)}
                     style={{ padding: "0.5rem", marginRight: "0.5rem" }}
                 />
-                <select
-                    value={timezone}
-                    onChange={(e) => setTimezone(e.target.value)}
-                    style={{ padding: "0.5rem", marginRight: "0.5rem" }}
-                >
-                    {timezones.map((tz) => (
-                        <option key={tz} value={tz}>
-                            {tz}
-                        </option>
-                    ))}
-                </select>
                 <button type="submit" style={{ padding: "0.5rem 1rem" }}>
                     {loading ? "Crunching..." : "Go"}
                 </button>
             </form>
+            <p>
+                Timezone detected: <strong>{timezone}</strong>
+            </p>
             {error && <p style={{ color: "red" }}>{error}</p>}
             {hourlyData && (
                 <div style={{ marginTop: "2rem" }}>
