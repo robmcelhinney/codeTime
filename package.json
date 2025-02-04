@@ -1,5 +1,5 @@
 {
-    "name": "my-github-stats",
+    "name": "codeTime",
     "version": "1.0.0",
     "scripts": {
         "dev": "next dev",
